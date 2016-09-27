@@ -7,4 +7,95 @@
     <label for="amount">Amount</label>
     <input class="form-control" cam-variable-type="Double" cam-variable-name="amount" name ="amount" />
   </div>
+  
+  
+
+
+  <div class="form-group">
+  <label for="userSelect">Users</label>
+<select  name ="userSelect" ng-model="selectedUser">
+         <option ng-repeat="user in apiUsers" value="{{user.username}}">{{user.username}}</option>
+     </select>  
+  
+   </div> 
+  
+  <div class="form-group">
+  <label for="mailSelect">Users mail</label>
+<select  name ="mailSelect" ng-model="selectedMail">
+         <option ng-repeat="user in apiUsers" value="{{user.email}}">{{user.email}}</option>
+     </select>  
+  
+   </div> 
+    <div class="form-group">
+  <label for="numSelect">Numeros</label>
+<select  name ="numSelect" ng-model="selectedNum">
+         <option ng-repeat="n in nums" value="{{n.index}}">{{n.name}}</option>
+     </select>  
+  
+   </div> 
+  
+  
+  <p class="input-group">
+
+  <input type="text"
+       cam-variable-name="CONTRACT_START_DATE"
+       cam-variable-type="Date"
+       class="form-control"
+       datepicker-popup="yyyy-MM-dd'T'HH:mm:ss"
+       is-open="dateFieldOpened" />
+
+  <span class="input-group-btn">
+    <button type="button"
+            class="btn btn-default"
+            ng-click="open($event)">
+      <i class="glyphicon glyphicon-calendar"></i>
+    </button>
+  </span>
+</p>
+  
+  
+  
+
+
+  <script cam-script type="text/form-script">
+
+ $scope.open = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.dateFieldOpened = true;
+  };
+
+
+  inject([ '$scope', '$http', function($scope, $http) {
+      camForm.on('form-loaded', function() {
+        // use injected $http service for making requests
+      
+	   $http.get("http://jsonplaceholder.typicode.com/users").then(function(res) {
+		console.log(res);
+		$scope.apiUsers=res.data;
+        });
+
+
+  $http.jsonp("http://localhost:3000/api?callback=jsonp_callback").then(function(res) {
+		console.log(res.found);
+	$scope.nums=res.found;
+
+    });
+  
+
+      });
+    }]);
+
+
+
+
+
+
+  </script>
+
+
+  
+  
+  
 </form>
