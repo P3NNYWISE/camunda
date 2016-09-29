@@ -7,8 +7,17 @@
     <label for="amount">Amount</label>
     <input class="form-control" cam-variable-type="Double" cam-variable-name="amount" name ="amount" />
   </div>
-  
-  
+    
+
+    <div class="form-group">
+    <label for="apiResponse">Api Response</label>
+    <input class="form-control" 
+    	cam-variable-type="String" 
+    	cam-variable-name="apiResponse" 
+    	name="apiResponse" 
+    	ng-model = "apiresponse"/>
+    	
+  </div>
 
 
   <div class="form-group">
@@ -59,6 +68,8 @@
 
   <script cam-script type="text/form-script">
 
+
+
  $scope.open = function($event) {
     $event.preventDefault();
     $event.stopPropagation();
@@ -70,19 +81,43 @@
   inject([ '$scope', '$http', function($scope, $http) {
       camForm.on('form-loaded', function() {
         // use injected $http service for making requests
+
+		var url = "https://api-ak.wunderground.com/api/606f3f6977348613/history_2016012320160131/units:metric/v:2.0/q/pws:KNYNEWYO395.json?callback=jsonp_callback" ;
       
 	   $http.get("http://jsonplaceholder.typicode.com/users").then(function(res) {
-		console.log(res);
-		$scope.apiUsers=res.data;
+			console.log(res);
+			$scope.apiUsers=res.data;
         });
 
 
-  $http.jsonp("http://localhost:3000/api?callback=jsonp_callback").then(function(res) {
-		console.log(res.found);
-	$scope.nums=res.found;
 
-    });
-  
+  		$scope.doRequest = function() {
+
+	
+    	
+	
+		$http.jsonp("https://librivox.org/api/feed/audiobooks/author/Melville?format=jsonp&callback=JSON_CALLBACK")
+    		.success(function (data ,status , header , conf) {
+				console.log(data);
+        		
+
+	    });
+	   $http.jsonp("https://api-ak.wunderground.com/api/606f3f6977348613/history_2016012320160131/units:metric/v:2.0/q/pws:KNYNEWYO395.json?format=jsonp&callback=JSON_CALLBACK")
+    		.success(function (data ,status , header , conf) {
+				console.log(data);
+				console.log(data.response);
+				console.log(data.history);
+        		console.log("dentro");
+				$scope.apiresponse =  data.response.termsofService;
+
+	    });
+	
+
+
+		}	
+
+		$scope.doRequest();
+
 
       });
     }]);
